@@ -4,6 +4,9 @@
 /mae_test
 /mae_train
 /__pycache__
+/data
+/mae_add
+/data_add
 *.gitignore
 *..gitattributes
 

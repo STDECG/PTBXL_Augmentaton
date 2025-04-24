@@ -48,14 +48,11 @@ if __name__ == '__main__':
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     check_points_path = './checkpoints/'
-    loss_path = './loss_npys/'
-
-    for i in [check_points_path, loss_path]:
-        if not os.path.exists(i):
-            os.makedirs(i, exist_ok=True)
+    if not os.path.exists(check_points_path):
+        os.makedirs(check_points_path, exist_ok=True)
 
     train_path = './mae_train/'
-    train_dataset = ECGDataset(train_path, mask_prob=0.5, mask_length=30)
+    train_dataset = ECGDataset(train_path)
     m = len(train_dataset)
     train_data, val_data = random_split(train_dataset, [m - int(0.2 * m), int(0.2 * m)],
                                         generator=torch.Generator().manual_seed(42))
@@ -75,20 +72,11 @@ if __name__ == '__main__':
     early_stopping = EarlyStopping(patience=10, verbose=True, delta=0.00001,
                                    path=os.path.join(check_points_path, f'best_model.pt'))
 
-    train_losses, val_losses = [], []
     for epoch in range(epochs):
         train_loss = train(model, train_loader, criterion, optimizer, device)
         val_loss = evaluate(model, val_loader, criterion, device)
 
         print(f'Epoch {epoch + 1} -- Train Loss: {train_loss:.4f} | Val Loss: {val_loss:.4f}')
-
-        train_losses.append(train_loss)
-        val_losses.append(val_loss)
-
-        np.save(os.path.join(loss_path, f'train_loss'), train_losses,
-                allow_pickle=True)
-        np.save(os.path.join(loss_path, f'valid_loss'), val_losses,
-                allow_pickle=True)
 
         early_stopping(val_loss, model)
         if early_stopping.early_stop:

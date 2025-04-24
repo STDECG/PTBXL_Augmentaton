@@ -5,19 +5,19 @@ import random
 import numpy as np
 import torch
 from torch.utils.data import DataLoader, Dataset
-from utils import load_npy, normalize_channel
+
+from utils import load_npy
 
 
 class ECGDataset(Dataset):
-    def __init__(self, root_path, mask_prob, mask_length):
-        self.mask_prob = mask_prob
-        self.mask_length = mask_length
+    def __init__(self, root_path):
+        self.mask_prob = round(random.uniform(0.1, 0.6), 1)
+        self.mask_length = np.random.randint(50, 100)
 
         self.npy_files = glob.glob(os.path.join(root_path, '*/*.npy'))
 
     def __getitem__(self, index):
         data, label = load_npy(self.npy_files[index])
-        data = normalize_channel(data)
 
         channel_masks = int(len(data) * self.mask_prob)
         mask_channels = random.sample(range(len(data)), k=channel_masks)
@@ -25,12 +25,19 @@ class ECGDataset(Dataset):
         masked_data = data.copy()
 
         for mask_channel in mask_channels:
-            num_masks = np.random.randint(2, 4)
-            mask_starts = [np.random.randint(0, 60)]
+            num_masks = np.random.randint(2, 6)
+            max_start = len(data[mask_channel]) - self.mask_length
+            if max_start <= 0:
+                continue
+
+            mask_starts = [np.random.randint(0, max_start)]
 
             for _ in range(1, num_masks):
-                mask_starts.append(
-                    np.random.randint(mask_starts[-1] + self.mask_length, mask_starts[-1] + self.mask_length * 2))
+                next_start_min = mask_starts[-1] + self.mask_length
+                next_start_max = min(mask_starts[-1] + self.mask_length * 2, max_start)
+                if next_start_min >= max_start:
+                    break
+                mask_starts.append(np.random.randint(next_start_min, next_start_max))
 
             for mask_start in mask_starts:
                 masked_data[mask_channel][mask_start:mask_start + self.mask_length] = 0
@@ -46,7 +53,7 @@ class ECGDataset(Dataset):
 
 if __name__ == '__main__':
     data_path = './mae_train/'
-    dataset = ECGDataset(data_path, mask_prob=0.5, mask_length=10)
+    dataset = ECGDataset(data_path)
 
     data_loader = DataLoader(dataset, batch_size=16, shuffle=True)
     data, label = next(iter(data_loader))

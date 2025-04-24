@@ -6,6 +6,8 @@ import os
 
 from tqdm import tqdm
 
+from utils import normalize_channel
+
 if __name__ == '__main__':
     data_path = './PTBXL/'
     xlsx_files = glob.glob(os.path.join(data_path, '*/*.xlsx'))
@@ -29,6 +31,7 @@ if __name__ == '__main__':
     for xlsx_file in tqdm(xlsx_files):
         ecg_data = pd.read_excel(xlsx_file).values
         ecg_data = ecg_data.T
+        ecg_data = normalize_channel(ecg_data)
 
         label = xlsx_file.split('\\')[-2]
 
