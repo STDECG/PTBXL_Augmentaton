@@ -1,13 +1,12 @@
 import os
 
 import torch
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import accuracy_score
 from torch import nn
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 from dataset_classification import ECGDataset
-from model import se_resnet18
 from small_model import ECGModel
 
 

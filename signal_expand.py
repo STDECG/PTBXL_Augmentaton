@@ -4,7 +4,7 @@ import numpy as np
 import torch
 from tqdm import tqdm
 
-from predict_mae_mask import generate_signal
+from mae_evaluate import generate_signal
 from unet import UNet
 from utils import set_seed, load_npy
 

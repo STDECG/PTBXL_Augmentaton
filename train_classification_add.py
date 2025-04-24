@@ -6,7 +6,6 @@ from torch.utils.data import random_split
 from tqdm import tqdm
 
 from dataset_classification import ECGDataset
-from model import se_resnet18
 from small_model import ECGModel
 from utils import set_seed, EarlyStopping
 
