@@ -90,7 +90,7 @@ class UNet(nn.Module):
     def __init__(self):
         super(UNet, self).__init__()
 
-        self.inc = DeepwiseConv(32, 64, kernel_size=7, dilation=2)
+        self.inc = DeepwiseConv(12, 64, kernel_size=7, dilation=2)
         self.down1 = Down(64, 128, down_size=5, kernel_size=5, dilation=2)
         self.down2 = Down(128, 256, down_size=2, kernel_size=3, dilation=2)
 
@@ -100,7 +100,7 @@ class UNet(nn.Module):
         self.up2 = Up(128, 64, up_size=2, kernel_size=5, dilation=2)
         self.up3 = Up(64, 32, up_size=5, kernel_size=7, dilation=2)
 
-        self.outc = OutConv(32, 32)
+        self.outc = OutConv(32, 12)
 
     def forward(self, x):
         x1 = self.inc(x)

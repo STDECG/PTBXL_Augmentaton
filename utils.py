@@ -14,16 +14,11 @@ def load_npy(npy_file):
     return data, label
 
 
-def normalize(data):
-    return (data - min(data)) / (max(data) - min(data) + 1e-10)
-
-
 def normalize_channel(data):
-    normalized = []
-    for i in range(len(data)):
-        normalized_data = normalize(data[i])
-        normalized.append(normalized_data)
-    normalized = np.array(normalized)
+    min_vals = np.min(data, axis=1, keepdims=True)
+    max_vals = np.max(data, axis=1, keepdims=True)
+
+    normalized = (data - min_vals) / (max_vals - min_vals + 1e-10)
 
     return normalized
 

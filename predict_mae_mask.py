@@ -8,7 +8,7 @@ from unet import UNet
 from utils import load_npy, normalize_channel
 
 
-def random_mask(data, mask_prob):  # 32, 128
+def random_mask(data, mask_prob):
     mask_prob_per_channel = np.random.rand(data.shape[0]) < mask_prob
     masked_data = data.copy()
 
@@ -21,11 +21,13 @@ def random_mask(data, mask_prob):  # 32, 128
     return masked_data
 
 
-def plot(data):
-    plt.figure(figsize=(20, 20), dpi=200)
-    for j in range(0, 32):
-        plt.subplot(16, 2, j + 1)
-        plt.plot(data[j])
+def plot_12_lead(data):
+    plt.figure(figsize=(12, 8))
+
+    for i in range(len(data)):
+        plt.subplot(len(data), 1, i + 1)
+        plt.plot(data[i], label=f'Lead {i + 1}')
+        plt.axis('off')
 
     plt.tight_layout()
     plt.show()
@@ -34,7 +36,7 @@ def plot(data):
 if __name__ == '__main__':
     device = 'cpu' if torch.cuda.is_available() else 'cpu'
 
-    test_file = './arousal_files/s32_2159.npy'
+    test_file = './mae_test/ALMI/6.npy'
 
     data, label = load_npy(test_file)
     data = normalize_channel(data)
@@ -57,8 +59,6 @@ if __name__ == '__main__':
         for mask_start in mask_starts:
             masked_data[mask_channel][mask_start:mask_start + mask_length] = 0
 
-    data_expand = data[np.newaxis, :]
-
     masked_data_expand = masked_data[np.newaxis, :]
     masked_data_torch = torch.from_numpy(masked_data_expand).float()
 
@@ -69,8 +69,7 @@ if __name__ == '__main__':
     with torch.no_grad():
         outputs = model(masked_data_torch)
         outputs = outputs.data.cpu().numpy()
-
     outputs = outputs.squeeze(0)
 
-    plot(data)
-    plot(outputs)
+    plot_12_lead(data)
+    plot_12_lead(outputs)

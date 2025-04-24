@@ -10,11 +10,10 @@ from utils import load_npy, normalize_channel
 
 class ECGDataset(Dataset):
     def __init__(self, root_path, mask_prob, mask_length):
-        self.data_path = root_path
         self.mask_prob = mask_prob
         self.mask_length = mask_length
 
-        self.npy_files = glob.glob(os.path.join(data_path, '*/*.npy'))
+        self.npy_files = glob.glob(os.path.join(root_path, '*/*.npy'))
 
     def __getitem__(self, index):
         data, label = load_npy(self.npy_files[index])
