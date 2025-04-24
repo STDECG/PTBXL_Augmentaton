@@ -32,9 +32,9 @@ if __name__ == '__main__':
     model = ECGModel(num_classes=8).to(device)
     check_points_path = './checkpoints/'
     model.load_state_dict(
-        torch.load(os.path.join(check_points_path, 'best-model-classification.pt'), map_location=device))
+        torch.load(os.path.join(check_points_path, 'best-model-classification-add.pt'), map_location=device))
 
-    test_path = './data/test/'
+    test_path = './data_add/test/'
     test_dataset = ECGDataset(test_path)
     test_loader = DataLoader(test_dataset, batch_size=512, shuffle=True)
 
@@ -42,4 +42,4 @@ if __name__ == '__main__':
 
     test_preds, test_trues = evaluate(model, test_loader, criterion, device)
     test_acc = accuracy_score(test_trues, test_preds)
-    print(f'Test Acc: {round(test_acc, 2)}')  # Test Acc: 0.78
+    print(f'Test Acc: {round(test_acc, 2)}')  # Test Acc: 0.86

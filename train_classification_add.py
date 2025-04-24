@@ -47,13 +47,13 @@ if __name__ == '__main__':
     set_seed(42)
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-    train_path = './data/train/'
+    train_path = './data_add/train/'
     train_dataset = ECGDataset(train_path)
     m = len(train_dataset)
     train_data, val_data = random_split(train_dataset, [m - int(0.2 * m), int(0.2 * m)],
                                         generator=torch.Generator().manual_seed(42))
 
-    batch_size = 32
+    batch_size = 64
     train_loader = torch.utils.data.DataLoader(train_data, batch_size=batch_size, shuffle=True)
     val_loader = torch.utils.data.DataLoader(val_data, batch_size=batch_size, shuffle=False)
 
@@ -65,7 +65,7 @@ if __name__ == '__main__':
     if not os.path.exists(check_points_path):
         os.makedirs(check_points_path, exist_ok=True)
     early_stopping = EarlyStopping(patience=10, verbose=True, delta=0.0001,
-                                   path=os.path.join(check_points_path, 'best-model-classification.pt'))
+                                   path=os.path.join(check_points_path, 'best-model-classification-add.pt'))
 
     for epoch in range(100):
         train_loss, train_acc = train(model, train_loader, criterion, optimizer, device)

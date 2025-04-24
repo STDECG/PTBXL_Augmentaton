@@ -20,7 +20,7 @@ if __name__ == '__main__':
     npy_files = glob.glob(os.path.join(data_path, '*/*.npy'))
     add_files = [os.path.join(add_path, add_file) for add_file in os.listdir(add_path)]
 
-    total_files = npy_files + add_files
+    total_files = npy_files + add_files  # 35699
 
     labels = []
     for npy_file in tqdm(total_files):
