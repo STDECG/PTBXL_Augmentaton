@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torchinfo import summary
 
 
 class DeepwiseConv(nn.Module):
@@ -119,7 +118,7 @@ class UNet(nn.Module):
 
 
 if __name__ == '__main__':
-    input = torch.randn(size=(1, 32, 1000))
+    input = torch.randn(size=(1, 12, 1000))
     model = UNet()
 
     print(model(input).shape)

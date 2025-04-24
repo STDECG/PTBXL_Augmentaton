@@ -1,7 +1,10 @@
 /.idea
 /npy_files
 /PTBXL
-
+/mae_test
+/mae_train
+/__pycache__
+*.gitignore
 
 # *.txt  ，*.xls  表示过滤某种类型的文件
 # target/ ：表示过滤这个文件夹下的所有文件

@@ -5,7 +5,7 @@ import numpy as np
 import torch
 
 
-def load_single_npy(npy_file):
+def load_npy(npy_file):
     file = np.load(npy_file, allow_pickle=True)[()]
 
     data = file['data']
