@@ -1,3 +1,4 @@
+import glob
 import os
 import random
 
@@ -13,10 +14,10 @@ class ECGDataset(Dataset):
         self.mask_prob = mask_prob
         self.mask_length = mask_length
 
-        self.npy_files = [npy_file for npy_file in os.listdir(self.data_path) if npy_file.endswith('.npy')]
+        self.npy_files = glob.glob(os.path.join(data_path, '*/*.npy'))
 
     def __getitem__(self, index):
-        data, label = load_npy(os.path.join(self.data_path, self.npy_files[index]))
+        data, label = load_npy(self.npy_files[index])
         data = normalize_channel(data)
 
         channel_masks = int(len(data) * self.mask_prob)
@@ -45,7 +46,7 @@ class ECGDataset(Dataset):
 
 
 if __name__ == '__main__':
-    data_path = './npy_files/ALMI/'
+    data_path = './mae_train/'
     dataset = ECGDataset(data_path, mask_prob=0.5, mask_length=10)
 
     data_loader = DataLoader(dataset, batch_size=16, shuffle=True)

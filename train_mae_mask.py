@@ -54,8 +54,8 @@ if __name__ == '__main__':
         if not os.path.exists(i):
             os.makedirs(i, exist_ok=True)
 
-    train_path = './arousal_exp/stage1/data_stage1/'
-    train_dataset = ECGDataset(train_path, mask_prob=0.5, mask_length=10)
+    train_path = './mae_train/'
+    train_dataset = ECGDataset(train_path, mask_prob=0.5, mask_length=30)
     m = len(train_dataset)
     train_data, val_data = random_split(train_dataset, [m - int(0.2 * m), int(0.2 * m)],
                                         generator=torch.Generator().manual_seed(42))
